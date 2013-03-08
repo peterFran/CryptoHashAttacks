@@ -22,13 +22,13 @@ class BruteForce:
 		self.hashesMatched = 0
 
 	def bruteAttack(self):
-		start = time.time()
+		self.start = time.time()
 		try:
 			for i in range(0,6):
 				self.levelCascade("",i)
 		except Exception as e:
 			pass 
-		self.time_elapsed = time.time() - start
+		self.time_elapsed = time.time() - self.start
 		return self.finaliseOutput()
 		
 	def levelCascade(self, previous, level):
@@ -36,8 +36,10 @@ class BruteForce:
 			for i in self.alphabet:
 				digest = sha1(self.salt+previous+i).hexdigest()
 				if digest in self.hashtuple:
-					print "Found: %s matches %s" % (previous+i,digest)
-					self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (previous+i, digest)
+					elapsed_time = self.formatTime(time.time() - self.start)
+					
+					print "Found: %s matches %s Time taken %s" % (previous+i,digest,elapsed_time)
+					self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n\t Cracked in %s\n" % (previous+i, digest, elapsed_time)
 					self.hashesMatched += 1
 					if self.hashesMatched == len(self.hashtuple):
 						raise Exception()
@@ -45,11 +47,24 @@ class BruteForce:
 			for i in self.alphabet:
 				self.levelCascade(previous+i, level-1)
 	
+	def formatTime(self, elapsed_time):
+		if elapsed_time > 3600:
+			hours = int(elapsed_time) / 3600
+			mins = (int(elapsed_time) % 3600) / 60
+			secs = elapsed_time % 60
+			return "%d h, %d m, %f s. Seconds: " % (hours, mins, secs, elapsed_time)
+		elif elapsed_time > 60:
+			mins = int(elapsed_time) / 60
+			secs = elapsed_time % 60
+			return "%d m, %f s. Seconds: " % (mins, secs, elapsed_time)
+		else:
+			return "Seconds: %f" % (elapsed_time)
+	
 	def finaliseOutput(self):
 		if "No password found" in self.passwordList:
 			
 			output = "%d passwords not matched, apologies...\n" % (len(self.hashtuple) - self.hashesMatched)
-			outpu+="Time taken = %f seconds\n" % self.time_elapsed
+			output+="Time taken = %f seconds\n" % self.time_elapsed
 		else:
 			output = "All hashes cracked. Take that!\n"
 		output = "List of passwords:\n"
@@ -77,6 +92,7 @@ if __name__ == '__main__':
 	"d5e694e1182362ee806e4b03eee9bb453a535482",
 	"120282760b8322ad7caed09edc011fc8dafb2f0b"
 	)
-	#a = BruteForce(saltedHashes,"uwe.ac.uk")
+	a = BruteForce(saltedHashes,"uwe.ac.uk")
+	print a.bruteAttack()
 	a = BruteForce(hashes,"")
 	print a.bruteAttack()
