@@ -31,21 +31,60 @@ class BruteForce:
 		self.time_elapsed = time.time() - self.start
 		return self.finaliseOutput()
 		
-	def levelCascade(self, previous, level):
-		if level==0:
+	def levelCascade(self):
 			for i in self.alphabet:
 				digest = sha1(self.salt+previous+i).hexdigest()
 				if digest in self.hashtuple:
-					elapsed_time = self.formatTime(time.time() - self.start)
 					
-					print "Found: %s matches %s Time taken %s" % (previous+i,digest,elapsed_time)
-					self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n\t Cracked in %s\n" % (previous+i, digest, elapsed_time)
 					self.hashesMatched += 1
 					if self.hashesMatched == len(self.hashtuple):
 						raise Exception()
+		for a in self.alphabet:
+			digest=sha1(self.salt + a).hexdigest()
+			if digest in self.hastuple:
+				
+				return a
+			for b in self.alphabet:
+				digest=sha1(self.salt + a+b).hexdigest()
+				if digest in self.hastuple:
+					print "Found: %s matches %s" % (a+b,digest)
+					self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a, digest)
+					return a+b
+				for c in self.alphabet:
+					digest=sha1(self.salt + a+b+c).hexdigest()
+					if digest in self.hastuple:
+						print "Found: %s matches %s" % (a+b+c,digest)
+						self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a+b+c, digest)
+						return a+b+c
+					for d in self.alphabet:
+						digest=sha1(self.salt + a+b+c+d).hexdigest()
+						if digest in self.hastuple:
+							print "Found: %s matches %s" % (a+b+c+d,digest)
+							self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a+b+c+d, digest)
+							return a+b+c+d
+						for e in self.alphabet:
+							digest=sha1(self.salt + a+b+c+d+e).hexdigest()
+							if digest in self.hastuple:
+								print "Found: %s matches %s" % (a+b+c+d+e,digest)
+								self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a+b+c+d+e, digest)
+								return a+b+c+d+e
+							for f in self.alphabet:
+								digest=sha1(self.salt + a+b+c+d+e+f).hexdigest()
+								if digest in self.hastuple:
+									print "Found: %s matches %s" % (a+b+c+d+e+f,digest)
+									self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a+b+c+d+e+f, digest)
+									return a+b+c+d+e+f
 		else:
 			for i in self.alphabet:
 				self.levelCascade(previous+i, level-1)
+	
+	def foundItem(self, item, digest):
+		elapsed_time = self.formatTime(time.time() - self.start)
+		print "Found: %s matches %s Time taken %s" % (item,digest,elapsed_time)
+		self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n\t Cracked in %s\n" % (item, digest, elapsed_time)
+		self.hashesMatched += 1
+		if self.hashesMatched == len(self.hashtuple):
+			raise Exception()
 	
 	def formatTime(self, elapsed_time):
 		if elapsed_time > 3600:
