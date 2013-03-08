@@ -15,7 +15,7 @@ import time
 
 class BruteForce:
 	def __init__(self, hashtuple, salt):
-		self.alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
+		self.alphabet = "cs034tif156abdeghjklmnopqruvwxyz2789"
 		self.salt = salt
 		self.hashtuple = hashtuple
 		self.passwordList = ["No password found"]*len(self.hashtuple)
