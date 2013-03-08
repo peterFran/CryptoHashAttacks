@@ -15,7 +15,7 @@ import time
 
 class BruteForce:
 	def __init__(self, hashtuple, salt):
-		self.alphabet = "cs034datif156obeghjklmnpqruvwxyz2789"
+		self.alphabet = "docs034atif156beghjklmnpqruvwxyz2789"
 		self.salt = salt
 		self.hashtuple = hashtuple
 		self.passwordList = [None]*len(self.hashtuple)
@@ -52,17 +52,15 @@ class BruteForce:
 			hours = int(elapsed_time) / 3600
 			mins = (int(elapsed_time) % 3600) / 60
 			secs = elapsed_time % 60
-			return "%d h, %d m, %f s. Seconds: " % (hours, mins, secs, elapsed_time)
+			return "%d h, %d m, %f seconds, or %f seconds" % (hours, mins, secs, elapsed_time)
 		elif elapsed_time > 60:
 			mins = int(elapsed_time) / 60
 			secs = elapsed_time % 60
-			return "%d m, %f s. Seconds: " % (mins, secs, elapsed_time)
+			return "%d m, %f seconds, or %f seconds" % (mins, secs, elapsed_time)
 		else:
-			return "Seconds: %f" % (elapsed_time)
+			return "%f seconds" % (elapsed_time)
 	
 	def finaliseOutput(self):
-		for i in self.passwordList:
-			print i
 		if None in self.passwordList:
 			output = "%d passwords not matched, apologies...\n" % (len(self.hashtuple) - self.hashesMatched)
 			output+="Time taken = %f seconds\n" % self.time_elapsed
@@ -98,5 +96,5 @@ if __name__ == '__main__':
 	)
 	a = BruteForce(saltedHashes,"uwe.ac.uk")
 	print a.bruteAttack()
-	a = BruteForce(hashes,"")
-	print a.bruteAttack()
+	#a = BruteForce(hashes,"")
+	#print a.bruteAttack()
