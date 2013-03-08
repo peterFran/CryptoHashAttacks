@@ -15,10 +15,10 @@ import time
 
 class BruteForce:
 	def __init__(self, hashtuple, salt):
-		self.alphabet = "cs034tif156abdeghjklmnopqruvwxyz2789"
+		self.alphabet = "abcdefghijklmnopqrstuvqxyz0123456789"
 		self.salt = salt
 		self.hashtuple = hashtuple
-		self.passwordList = ["No password found"]*len(self.hashtuple)
+		self.passwordList = [None]*len(self.hashtuple)
 		self.hashesMatched = 0
 
 	def bruteAttack(self):
@@ -31,56 +31,39 @@ class BruteForce:
 		self.time_elapsed = time.time() - self.start
 		return self.finaliseOutput()
 		
-	def levelCascade(self):
-			for i in self.alphabet:
-				digest = sha1(self.salt+previous+i).hexdigest()
-				if digest in self.hashtuple:
-					
-					self.hashesMatched += 1
-					if self.hashesMatched == len(self.hashtuple):
-						raise Exception()
-		for a in self.alphabet:
-			digest=sha1(self.salt + a).hexdigest()
-			if digest in self.hastuple:
-				
-				return a
-			for b in self.alphabet:
-				digest=sha1(self.salt + a+b).hexdigest()
+	def bruteAttack(self):
+		try:
+			for a in self.alphabet:
+				digest=sha1(self.salt + a).hexdigest()
 				if digest in self.hastuple:
-					print "Found: %s matches %s" % (a+b,digest)
-					self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a, digest)
-					return a+b
-				for c in self.alphabet:
-					digest=sha1(self.salt + a+b+c).hexdigest()
+					self.foundItem(a, digest)
+				for b in self.alphabet:
+					digest=sha1(self.salt + a+b).hexdigest()
 					if digest in self.hastuple:
-						print "Found: %s matches %s" % (a+b+c,digest)
-						self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a+b+c, digest)
-						return a+b+c
-					for d in self.alphabet:
-						digest=sha1(self.salt + a+b+c+d).hexdigest()
+						self.foundItem(a+b, digest)
+					for c in self.alphabet:
+						digest=sha1(self.salt + a+b+c).hexdigest()
 						if digest in self.hastuple:
-							print "Found: %s matches %s" % (a+b+c+d,digest)
-							self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a+b+c+d, digest)
-							return a+b+c+d
-						for e in self.alphabet:
-							digest=sha1(self.salt + a+b+c+d+e).hexdigest()
+							self.foundItem(a+b+c, digest)
+						for d in self.alphabet:
+							digest=sha1(self.salt + a+b+c+d).hexdigest()
 							if digest in self.hastuple:
-								print "Found: %s matches %s" % (a+b+c+d+e,digest)
-								self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a+b+c+d+e, digest)
-								return a+b+c+d+e
-							for f in self.alphabet:
-								digest=sha1(self.salt + a+b+c+d+e+f).hexdigest()
+								self.foundItem(a+b+c+d,digest)
+							for e in self.alphabet:
+								digest=sha1(self.salt + a+b+c+d+e).hexdigest()
 								if digest in self.hastuple:
-									print "Found: %s matches %s" % (a+b+c+d+e+f,digest)
-									self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (a+b+c+d+e+f, digest)
-									return a+b+c+d+e+f
-		else:
-			for i in self.alphabet:
-				self.levelCascade(previous+i, level-1)
+									self.foundItem(a+b+c+d+e,digest)
+								for f in self.alphabet:
+									digest=sha1(self.salt + a+b+c+d+e+f).hexdigest()
+									if digest in self.hastuple:
+										self.foundItem(a+b+c+d+e+f,digest)
+		except:
+			pass
+		return self.finaliseOutput()
 	
 	def foundItem(self, item, digest):
 		elapsed_time = self.formatTime(time.time() - self.start)
-		print "Found: %s matches %s Time taken %s" % (item,digest,elapsed_time)
+		print "Found: %s matches %s Cracked in %s seconds" % (item,digest,elapsed_time)
 		self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n\t Cracked in %s\n" % (item, digest, elapsed_time)
 		self.hashesMatched += 1
 		if self.hashesMatched == len(self.hashtuple):
@@ -91,7 +74,7 @@ class BruteForce:
 			hours = int(elapsed_time) / 3600
 			mins = (int(elapsed_time) % 3600) / 60
 			secs = elapsed_time % 60
-			return "%d h, %d m, %f s. Seconds: " % (hours, mins, secs, elapsed_time)
+			return "%d h, %d m, %f seconds " % (hours, mins, secs, elapsed_time)
 		elif elapsed_time > 60:
 			mins = int(elapsed_time) / 60
 			secs = elapsed_time % 60
