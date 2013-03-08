@@ -17,7 +17,7 @@ class BruteForce:
 		self.alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
 		self.salt = salt
 		self.hashtuple = hashtuple
-		self.passwordList = ["No password found"]*self.tupleLength
+		self.passwordList = ["No password found"]*len(self.hashtuple)
 		self.hashesMatched = 0
 
 	def badBruteAttack(self):
