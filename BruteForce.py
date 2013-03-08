@@ -18,7 +18,7 @@ class BruteForce:
 		self.alphabet = "cs034tif156abdeghjklmnopqruvwxyz2789"
 		self.salt = salt
 		self.hashtuple = hashtuple
-		self.passwordList = ["No password found"]*len(self.hashtuple)
+		self.passwordList = [None]*len(self.hashtuple)
 		self.hashesMatched = 0
 
 	def bruteAttack(self):
@@ -61,15 +61,19 @@ class BruteForce:
 			return "Seconds: %f" % (elapsed_time)
 	
 	def finaliseOutput(self):
-		if "No password found" in self.passwordList:
-			
+		for i in self.passwordList:
+			print i
+		if None in self.passwordList:
 			output = "%d passwords not matched, apologies...\n" % (len(self.hashtuple) - self.hashesMatched)
 			output+="Time taken = %f seconds\n" % self.time_elapsed
 		else:
 			output = "All hashes cracked. Take that!\n"
 		output = "List of passwords:\n"
 		for x in self.passwordList:
-			output += x
+			if x is None:
+				output += "Hash not found at this index.\n"
+			else:
+				output += x
 		return output
 		
 if __name__ == '__main__':
