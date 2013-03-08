@@ -63,7 +63,7 @@ class BruteForce:
 	
 	def foundItem(self, item, digest):
 		elapsed_time = self.formatTime(time.time() - self.start)
-		print "Found: %s matches %s Cracked in %s seconds" % (item,digest,elapsed_time)
+		print "Found: %s matches %s Cracked in %s" % (item,digest,elapsed_time)
 		self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n\t Cracked in %s\n" % (item, digest, elapsed_time)
 		self.hashesMatched += 1
 		if self.hashesMatched == len(self.hashtuple):
@@ -74,26 +74,28 @@ class BruteForce:
 			hours = int(elapsed_time) / 3600
 			mins = (int(elapsed_time) % 3600) / 60
 			secs = elapsed_time % 60
-			return "%d h, %d m, %f seconds " % (hours, mins, secs, elapsed_time)
+			return "%d h, %d m, %f seconds, or %f seconds" % (hours, mins, secs, elapsed_time)
 		elif elapsed_time > 60:
 			mins = int(elapsed_time) / 60
 			secs = elapsed_time % 60
-			return "%d m, %f s. Seconds: " % (mins, secs, elapsed_time)
+			return "%d m, %f seconds, or %f seconds" % (mins, secs, elapsed_time)
 		else:
-			return "Seconds: %f" % (elapsed_time)
+			return "%f seconds" % (elapsed_time)
 	
 	def finaliseOutput(self):
-		if "No password found" in self.passwordList:
-			
+		if None in self.passwordList:
 			output = "%d passwords not matched, apologies...\n" % (len(self.hashtuple) - self.hashesMatched)
-			output+="Time taken = %f seconds\n" % self.time_elapsed
 		else:
 			output = "All hashes cracked. Take that!\n"
+		output+="Time taken = %f seconds\n" % self.time_elapsed
 		output = "List of passwords:\n"
 		for x in self.passwordList:
-			output += x
+			if x is None:
+				output += "Hash not found at this index.\n"
+			else:
+				output += x
 		return output
-		
+	
 if __name__ == '__main__':
 	hashes = ("c2543fff3bfa6f144c2f06a7de6cd10c0b650cae",
 	"b47f363e2b430c0647f14deea3eced9b0ef300ce",
