@@ -11,6 +11,7 @@ import sys
 import os
 import unittest
 from hashlib import sha1
+import time
 
 class BruteForce:
 	def __init__(self, hashtuple, salt):
@@ -20,18 +21,14 @@ class BruteForce:
 		self.passwordList = ["No password found"]*len(self.hashtuple)
 		self.hashesMatched = 0
 
-	def badBruteAttack(self):
-		try:
-			self.depthFirst("",i)
-		except Exception as e:
-			pass 
-		return self.finaliseOutput()
 	def bruteAttack(self):
+		start = time.time()
 		try:
 			for i in range(0,6):
 				self.levelCascade("",i)
 		except Exception as e:
 			pass 
+		self.time_elapsed = time.time() - start
 		return self.finaliseOutput()
 		
 	def levelCascade(self, previous, level):
@@ -52,6 +49,7 @@ class BruteForce:
 		if "No password found" in self.passwordList:
 			
 			output = "%d passwords not matched, apologies...\n" % (len(self.hashtuple) - self.hashesMatched)
+			outpu+="Time taken = %f seconds\n" % self.time_elapsed
 		else:
 			output = "All hashes cracked. Take that!\n"
 		output = "List of passwords:\n"

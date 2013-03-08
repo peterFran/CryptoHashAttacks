@@ -1,3 +1,9 @@
+def badBruteAttack(self):
+	try:
+		self.depthFirst("",i)
+	except Exception as e:
+		pass 
+	return self.finaliseOutput()
 def depthFirst(self):
 	for a in self.alphabet:
 		digest=sha1(self.salt + a).hexdigest()
