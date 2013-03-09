@@ -20,45 +20,37 @@ class BruteForce:
 		self.hashtuple = hashtuple
 		self.passwordList = [None]*len(self.hashtuple)
 		self.hashesMatched = 0
-
+	
 	def bruteAttack(self):
 		self.start = time.time()
 		try:
-			for i in range(0,6):
-				self.levelCascade("",i)
-		except Exception as e:
-			pass 
-		self.time_elapsed = time.time() - self.start
-		return self.finaliseOutput()
-		
-	def bruteAttack(self):
-		try:
 			for a in self.alphabet:
 				digest=sha1(self.salt + a).hexdigest()
-				if digest in self.hastuple:
+				if digest in self.hashtuple:
 					self.foundItem(a, digest)
 				for b in self.alphabet:
 					digest=sha1(self.salt + a+b).hexdigest()
-					if digest in self.hastuple:
+					if digest in self.hashtuple:
 						self.foundItem(a+b, digest)
 					for c in self.alphabet:
 						digest=sha1(self.salt + a+b+c).hexdigest()
-						if digest in self.hastuple:
+						if digest in self.hashtuple:
 							self.foundItem(a+b+c, digest)
 						for d in self.alphabet:
 							digest=sha1(self.salt + a+b+c+d).hexdigest()
-							if digest in self.hastuple:
+							if digest in self.hashtuple:
 								self.foundItem(a+b+c+d,digest)
 							for e in self.alphabet:
 								digest=sha1(self.salt + a+b+c+d+e).hexdigest()
-								if digest in self.hastuple:
+								if digest in self.hashtuple:
 									self.foundItem(a+b+c+d+e,digest)
 								for f in self.alphabet:
 									digest=sha1(self.salt + a+b+c+d+e+f).hexdigest()
-									if digest in self.hastuple:
+									if digest in self.hashtuple:
 										self.foundItem(a+b+c+d+e+f,digest)
 		except:
 			pass
+		self.time_elapsed = time.time() - self.start
 		return self.finaliseOutput()
 	
 	def foundItem(self, item, digest):
@@ -118,5 +110,5 @@ if __name__ == '__main__':
 	)
 	a = BruteForce(saltedHashes,"uwe.ac.uk")
 	print a.bruteAttack()
-	a = BruteForce(hashes,"")
-	print a.bruteAttack()
+	#a = BruteForce(hashes,"")
+	#print a.bruteAttack()
