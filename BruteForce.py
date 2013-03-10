@@ -15,7 +15,7 @@ import time
 
 class BruteForce:
 	def __init__(self, hashtuple, salt):
-		self.alphabet = "abcdefghijklmnopqrstuvqxyz0123456789"
+		self.alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
 		self.salt = salt
 		self.hashtuple = hashtuple
 		self.passwordList = [None]*len(self.hashtuple)
@@ -110,5 +110,5 @@ if __name__ == '__main__':
 	)
 	a = BruteForce(saltedHashes,"uwe.ac.uk")
 	print a.bruteAttack()
-	#a = BruteForce(hashes,"")
-	#print a.bruteAttack()
+	a = BruteForce(hashes,"")
+	print a.bruteAttack()
