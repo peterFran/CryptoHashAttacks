@@ -94,7 +94,7 @@ if __name__ == '__main__':
 	"d5e694e1182362ee806e4b03eee9bb453a535482",
 	"120282760b8322ad7caed09edc011fc8dafb2f0b"
 	)
-	a = BruteForce(saltedHashes,"uwe.ac.uk")
-	print a.bruteAttack()
-	#a = BruteForce(hashes,"")
+	#a = BruteForce(saltedHashes,"uwe.ac.uk")
 	#print a.bruteAttack()
+	a = BruteForce(hashes,"")
+	print a.bruteAttack()
