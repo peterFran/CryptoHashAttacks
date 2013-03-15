@@ -11,48 +11,83 @@ import sys
 import os
 import unittest
 from hashlib import sha1
-
+from Crypto import Random
 
 class CreateRainbowTable(object):
-	def __init__(self):
+	def __init__(self, maxStringLen, numChains, chainLength):
 		self.alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
 		self.table={}
-		self.reduce(sha1("hello").hexdigest(),78)
-	def reduce(self, hashVal, cascadeLevel):
-		hashVal = hashVal * cascadeLevel
-		print hashVal
-		length = (cascadeLevel % 6) + 1
-		firstReduce = hashVal[0:length]
-		out = ""
-		for i in firstReduce:
-			i = int(i) % len(self.alphabet)
-			out+=self.alphabet[i]
-		print out
-	def createTable(self):
-		pass
-	def bruteAttack(self):
-		try:
-			for i in range(0,6):
-				self.levelCascade("",i)
-		except Exception as e:
-			pass 
-		return self.finaliseOutput()
+		
+		self.maxStringLen = maxStringLen
+		self.numChains = numChains
+		self.chainLength = chainLength
+		self.maxVal = 0
+		self.boundaries = []
+		for i in range(0, self.maxStringLen):
+			self.maxVal += len(self.alphabet)**(i+1)
+			self.boundaries.append(self.maxVal)
+		val = sha1("hi").hexdigest()
+		self.reduceHash(val, 1)
 	
-	def levelCascade(self, previous, level):
-		if level==0:
-			for i in self.alphabet:
-				digest = sha1(previous+i).hexdigest()
-				if digest not in self.table:
-					digest = sha1(digest[0:level]).hexdigest()
-					if digest not in self.table:
-						digest = sha1(digest[1:level+1]).hexdigest()
-					self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n" % (previous+i, digest)
-					self.hashesMatched += 1
-					if self.hashesMatched == self.tupleLength:
-						raise Exception()
-		else:
-			for i in self.alphabet:
-				self.levelCascade(previous+i, level-1)
-
+	def getV(self, hashVal):
+		modLength = int(hashVal, 16) % self.maxVal
+		for index, val in enumerate(self.boundaries):
+			if modLength <= val:
+				return index+1
+	
+	def reduceHash(self, hashVal, cascadeLevel):
+		intValue = int(hashVal, 16)
+		self.reduceInt(intValue, cascadeLevel)
+	
+	def reduceInt(self, intVal, cascadeLevel):
+		intVal = (intVal+cascadeLevel)*cascadeLevel
+		modLength = intVal % self.maxVal
+		return self.getStringValue(modLength)
+	
+	def getStringValue(self, intValue):
+		stringVal = ""
+		for index, boundary in enumerate(self.boundaries):
+			if intValue >= boundary:
+				stringVal+=self.alphabet[(intValue%boundary)%len(self.alphabet)]
+	
+	def createTable(self):
+		for chain in range(1,self.numChains):
+			random_integer = random.randint(0, self.maxStringLength)
+			random_string = self.reduceInteger()
+			
+		
+	
+	def solve(self, hashValue):
+		newHash = hashValue
+		result = None
+		for step in range(0,self.num_steps):
+			start = self.checkTable(newHash)
+			if start is None:
+				newHash = sha1(self.reduce(newHash))
+			else:
+				return self.getPlainText(start, hashValue)
+	
+	def getPlainText(self, start, hashValue):
+		reduced = start
+		newHash = sha1(reduced)
+		while newHash != hashValue:
+			reduced = self.reduce(newHash)
+			newHash = sha1(reduced)
+		return reduced
+	
+	def checkTable(self, hashValue):
+		for row in self.table:
+			if hashValue == row["end"]:
+				return row["start"]
+		return None
+	
+	
+	
 if __name__ == '__main__':
-	cr = CreateRainbowTable()
+	cr = CreateRainbowTable(6)
+	
+	
+	
+	
+	
+	
