@@ -41,7 +41,8 @@ def main(argv=None):
 		
 		factory = TableFactory()
 		table = factory.importTableFromFile("table.txt")
-		table.solve(argv[1])
+		print "password: ",table.solve(argv[1])
+		
 	except Usage, err:
 		print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
 		print >> sys.stderr, "\t for help use --help"

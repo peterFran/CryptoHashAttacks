@@ -40,6 +40,16 @@ class TableFactoryTests(unittest.TestCase):
 	def setUp(self):
 		pass
 
-
 if __name__ == '__main__':
-	unittest.main()
+	factory = TableFactory()
+	table = factory.importTableFromFile("table.txt")
+	print table.calculateChainFromHash("c22b5f9178342609428d6f51b2c5af4c0bde6a42", 199823)
+	print table.reduceHash("c22b5f9178342609428d6f51b2c5af4c0bde6a42", 199823)
+	
+	
+	
+	
+	
+	
+	
+	
