@@ -15,17 +15,23 @@ import time
 
 class BruteForce:
 	def __init__(self, hashtuple, salt):
+		# Set alphabet, salt and tuple of hash values
 		self.alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
 		self.salt = salt
 		self.hashtuple = hashtuple
+		# Create a list of None values for collecting passwords
 		self.passwordList = [None]*len(self.hashtuple)
 		self.hashesMatched = 0
 	
 	def bruteAttack(self):
+		# Start timer
 		self.start = time.time()
+		# Loop through all possible passwords, going to the deepest point of the hash first (aaaaaa)
 		try:
+			# Count through the alphabet adding each letter in the alphabet on, then exploring its children
 			for a in self.alphabet:
 				digest=sha1(self.salt + a).hexdigest()
+				# If the password is found, handle in the foundItem method
 				if digest in self.hashtuple:
 					self.foundItem(a, digest)
 				for b in self.alphabet:
@@ -50,17 +56,23 @@ class BruteForce:
 										self.foundItem(a+b+c+d+e+f,digest)
 		except:
 			pass
+		# Stop timer
 		self.time_elapsed = time.time() - self.start
+		# Give nice readout
 		return self.finaliseOutput()
 	
+	# Format ouput when password found
 	def foundItem(self, item, digest):
 		elapsed_time = self.formatTime(time.time() - self.start)
 		print "Found: %s matches %s Cracked in %s" % (item,digest,elapsed_time)
 		self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n\t Cracked in %s\n" % (item, digest, elapsed_time)
+		
+		# If all passwords found, exit program
 		self.hashesMatched += 1
 		if self.hashesMatched == len(self.hashtuple):
 			raise Exception()
 	
+	# Method for formatting time output
 	def formatTime(self, elapsed_time):
 		if elapsed_time > 3600:
 			hours = int(elapsed_time) / 3600
@@ -74,6 +86,7 @@ class BruteForce:
 		else:
 			return "%f seconds" % (elapsed_time)
 	
+	# Format printout into output string
 	def finaliseOutput(self):
 		if None in self.passwordList:
 			output = "%d passwords not matched, apologies...\n" % (len(self.hashtuple) - self.hashesMatched)
