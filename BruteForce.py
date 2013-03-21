@@ -15,38 +15,51 @@ import time
 
 class BruteForce:
 	def __init__(self, hashtuple, salt):
+		# Set alphabet, salt and tuple of hash values
 		self.alphabet = "docs034atif156beghjklmnpqruvwxyz2789"
 		self.salt = salt
 		self.hashtuple = hashtuple
+		# Create a list of None values for collecting passwords
 		self.passwordList = [None]*len(self.hashtuple)
 		self.hashesMatched = 0
 
 	def bruteAttack(self):
+		# start timer
 		self.start = time.time()
 		try:
+			# For each possible password length cascade the levels
 			for i in range(0,6):
 				self.levelCascade("",i)
 		except Exception as e:
 			pass 
+		# Get total time
 		self.time_elapsed = time.time() - self.start
+		# Return tidied output
 		return self.finaliseOutput()
 		
 	def levelCascade(self, previous, level):
+		# If the focus is the final letter
 		if level==0:
+			# for each letter in alphabet
 			for i in self.alphabet:
+				# create hash, check if it's in tuple, if it is log it.
 				digest = sha1(self.salt+previous+i).hexdigest()
 				if digest in self.hashtuple:
 					elapsed_time = self.formatTime(time.time() - self.start)
 					
 					print "Found: %s matches %s Time taken %s" % (previous+i,digest,elapsed_time)
 					self.passwordList[self.hashtuple.index(digest)] = "Password %s = %s\n\t Cracked in %s\n" % (previous+i, digest, elapsed_time)
+					
+					# If all the hashes are found, escape the sequence
 					self.hashesMatched += 1
 					if self.hashesMatched == len(self.hashtuple):
 						raise Exception()
 		else:
+			# for each letter, explore one letter to the right
 			for i in self.alphabet:
 				self.levelCascade(previous+i, level-1)
 	
+	# Method for formatting time message
 	def formatTime(self, elapsed_time):
 		if elapsed_time > 3600:
 			hours = int(elapsed_time) / 3600
@@ -60,6 +73,7 @@ class BruteForce:
 		else:
 			return "%f seconds" % (elapsed_time)
 	
+	# Format results into readable output
 	def finaliseOutput(self):
 		if None in self.passwordList:
 			output = "%d passwords not matched, apologies...\n" % (len(self.hashtuple) - self.hashesMatched)
@@ -75,6 +89,7 @@ class BruteForce:
 		return output
 		
 if __name__ == '__main__':
+	# static main function
 	hashes = ("c2543fff3bfa6f144c2f06a7de6cd10c0b650cae",
 	"b47f363e2b430c0647f14deea3eced9b0ef300ce",
 	"e74295bfc2ed0b52d40073e8ebad555100df1380",
@@ -94,7 +109,7 @@ if __name__ == '__main__':
 	"d5e694e1182362ee806e4b03eee9bb453a535482",
 	"120282760b8322ad7caed09edc011fc8dafb2f0b"
 	)
-	#a = BruteForce(saltedHashes,"uwe.ac.uk")
-	#print a.bruteAttack()
+	a = BruteForce(saltedHashes,"uwe.ac.uk")
+	print a.bruteAttack()
 	a = BruteForce(hashes,"")
 	print a.bruteAttack()
