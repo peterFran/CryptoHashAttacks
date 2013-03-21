@@ -19,7 +19,7 @@ The help message goes here.
 
 class Usage(Exception):
 	def __init__(self, msg):
-		self.msg = msg
+		self.msg = "Script to create rainbow table and save it to file arg1=key length, arg2=number chains, arg3=chain length"
 
 
 def main(argv=None):
@@ -42,7 +42,7 @@ def main(argv=None):
 		
 		factory = TableFactory()
 		table = factory.generateNewTable(int(argv[1]),int(argv[2]),int(argv[3]))
-		table.writeOut("table.txt")
+		table.writeOut(argv[4])
 		
 	except Usage, err:
 		print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)

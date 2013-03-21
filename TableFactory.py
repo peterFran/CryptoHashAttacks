@@ -18,11 +18,13 @@ class TableFactory:
 	def __init__(self):
 		pass
 	
+	# Create a RainbowTable object and return it
 	def generateNewTable(self, key_length, number_chains, chain_length):
 		rainbow_table = RainbowTable(key_length, chain_length)
 		rainbow_table.createTable(number_chains)
 		return rainbow_table
-		
+	
+	# Import a rainbow table from a file and return the object
 	def importTableFromFile(self, filename):
 		with open(filename, 'r') as f:
 			stored_data = json.loads(f.read())
@@ -33,23 +35,4 @@ class TableFactory:
 			rainbow_table.table = table
 			return rainbow_table
 		
-	
-
-
-class TableFactoryTests(unittest.TestCase):
-	def setUp(self):
-		pass
-
-if __name__ == '__main__':
-	factory = TableFactory()
-	table = factory.importTableFromFile("table.txt")
-	print table.calculateChainFromHash("c22b5f9178342609428d6f51b2c5af4c0bde6a42", 199823)
-	print table.reduceHash("c22b5f9178342609428d6f51b2c5af4c0bde6a42", 199823)
-	
-	
-	
-	
-	
-	
-	
 	

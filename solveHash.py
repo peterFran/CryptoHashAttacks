@@ -18,7 +18,7 @@ The help message goes here.
 
 class Usage(Exception):
 	def __init__(self, msg):
-		self.msg = msg
+		self.msg = "Script to solve hash using rainbow table from file"
 
 
 def main(argv=None):
@@ -39,9 +39,12 @@ def main(argv=None):
 			if option in ("-o", "--output"):
 				output = value
 		
+		# Create a table factory
 		factory = TableFactory()
-		table = factory.importTableFromFile("table.txt")
-		print "password: ",table.solve(argv[1])
+		# 1st arg is the file name
+		table = factory.importTableFromFile(argv[1])
+		# 2nd Arg is the hash value
+		print "password: ",table.solve(argv[2])
 		
 	except Usage, err:
 		print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
